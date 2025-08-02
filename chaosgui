@@ -145,8 +145,9 @@ local buttons = {
     "Fling",
     "Emote Gui (250+)",
     "Voice Chat | Unban",
-    "TEST",
-    "TEST"
+    "Anti Afk",
+    "Universal Anti Ban",
+    "İnvisible"
 }
 
 -- Butonları oluştur
