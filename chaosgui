@@ -1,0 +1,257 @@
+local Player = game:GetService("Players").LocalPlayer
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+
+-- GUI Oluştur
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "NeonGUI"
+ScreenGui.Parent = game:GetService("CoreGui") or Player:WaitForChild("PlayerGui")
+
+-- Ana Pencere
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 350, 0, 400)
+MainFrame.Position = UDim2.new(0.5, -175, 0.5, -200)
+MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+MainFrame.BackgroundTransparency = 0.3
+MainFrame.BorderSizePixel = 0
+MainFrame.ClipsDescendants = true
+MainFrame.Parent = ScreenGui
+
+-- Neon Çerçeve
+local NeonFrame = Instance.new("Frame")
+NeonFrame.Name = "NeonFrame"
+NeonFrame.Size = UDim2.new(1, 6, 1, 6)
+NeonFrame.Position = UDim2.new(0, -3, 0, -3)
+NeonFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+NeonFrame.BackgroundTransparency = 0.8
+NeonFrame.BorderSizePixel = 0
+NeonFrame.ZIndex = 0
+NeonFrame.Parent = MainFrame
+
+-- Başlık
+local Title = Instance.new("TextLabel")
+Title.Name = "Title"
+Title.Size = UDim2.new(1, -100, 0, 30)
+Title.Position = UDim2.new(0, 15, 0, 10)
+Title.BackgroundTransparency = 1
+Title.Text = "CHAOS TEAM"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 18
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = MainFrame
+
+-- Yuvarlak Kontrol Butonları Fonksiyonu
+local function createControlButton(text, size, position)
+    local button = Instance.new("TextButton")
+    button.Name = text .. "Button"
+    button.Size = size
+    button.Position = position
+    button.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+    button.Text = text
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.Font = Enum.Font.GothamBold
+    button.TextSize = 14
+    button.AutoButtonColor = false
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(1, 0)
+    corner.Parent = button
+    
+    -- Neon efekti
+    local neon = Instance.new("Frame")
+    neon.Name = "Neon"
+    neon.Size = UDim2.new(1, 0, 1, 0)
+    neon.Position = UDim2.new(0, 0, 0, 0)
+    neon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    neon.BackgroundTransparency = 0.9
+    neon.BorderSizePixel = 0
+    neon.ZIndex = -1
+    neon.Parent = button
+    
+    button.MouseEnter:Connect(function()
+        TweenService:Create(neon, TweenInfo.new(0.2), {BackgroundTransparency = 0.7}):Play()
+    end)
+    
+    button.MouseLeave:Connect(function()
+        TweenService:Create(neon, TweenInfo.new(0.2), {BackgroundTransparency = 0.9}):Play()
+    end)
+    
+    return button
+end
+
+-- Modern Buton Fonksiyonu (Neon beyaz)
+local function createNeonButton(text, size, position)
+    local button = Instance.new("TextButton")
+    button.Name = text .. "Button"
+    button.Size = size
+    button.Position = position
+    button.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+    button.BackgroundTransparency = 0.4
+    button.Text = "  " .. text
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.Font = Enum.Font.Gotham
+    button.TextSize = 16
+    button.TextXAlignment = Enum.TextXAlignment.Left
+    button.AutoButtonColor = false
+    button.ZIndex = 2
+    
+    -- Neon efekti (arka plan)
+    local neon = Instance.new("Frame")
+    neon.Name = "Neon"
+    neon.Size = UDim2.new(1, 0, 1, 0)
+    neon.Position = UDim2.new(0, 0, 0, 0)
+    neon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    neon.BackgroundTransparency = 0.9
+    neon.BorderSizePixel = 0
+    neon.ZIndex = 1
+    neon.Parent = button
+    
+    -- Köşe yuvarlama
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = button
+    
+    -- Hover efekti
+    button.MouseEnter:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.2), {BackgroundTransparency = 0.3}):Play()
+        TweenService:Create(neon, TweenInfo.new(0.2), {BackgroundTransparency = 0.7}):Play()
+    end)
+    
+    button.MouseLeave:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.2), {BackgroundTransparency = 0.4}):Play()
+        TweenService:Create(neon, TweenInfo.new(0.2), {BackgroundTransparency = 0.9}):Play()
+    end)
+    
+    return button
+end
+
+-- Kontrol Butonları
+local CloseButton = createControlButton("X", UDim2.new(0, 25, 0, 25), UDim2.new(1, -30, 0, 10))
+CloseButton.Parent = MainFrame
+
+local MinimizeButton = createControlButton("-", UDim2.new(0, 25, 0, 25), UDim2.new(1, -60, 0, 10))
+MinimizeButton.Parent = MainFrame
+
+local MaximizeButton = createControlButton("+", UDim2.new(0, 25, 0, 25), UDim2.new(1, -90, 0, 10))
+MaximizeButton.Parent = MainFrame
+
+-- Buton Listesi
+local buttons = {
+    "Murder Mystery 2 | Over",
+    "Murder Mystery 2 | Only Esp",
+    "Fling",
+    "Emote Gui (250+)",
+    "Voice Chat | Unban",
+    "TEST",
+    "TEST"
+}
+
+-- Butonları oluştur
+local buttonHeight = 38
+local buttonSpacing = 8
+local startY = 50
+
+for i, btn in ipairs(buttons) do
+    local button = createNeonButton(btn, UDim2.new(0.9, 0, 0, buttonHeight), UDim2.new(0.05, 0, 0, startY + (i-1)*(buttonHeight + buttonSpacing)))
+    button.Parent = MainFrame
+    
+    button.MouseButton1Click:Connect(function()
+        if btn == "Murder Mystery 2" then
+loadstring(game:HttpGet("https://api.overdrivehub.xyz/v1/auth"))()
+            print("MM2 scripti çalışıyor")
+            
+        elseif btn == "Murder Mystery 2 | Only Esp" then
+loadstring(game:HttpGet("https://raw.githubusercontent.com/hayrankal/chaosgui/refs/heads/main/mm2onlyesp"))()
+            print("MM2 scripti çalışıyor")
+
+        elseif btn == "Fling" then
+loadstring(game:HttpGet("https://raw.githubusercontent.com/hayrankal/chaosgui/refs/heads/main/fling"))()
+            print("Fling scripti çalışıyor")
+            
+        elseif btn == "Emote Gui (250+)" then
+loadstring(game:HttpGet("https://raw.githubusercontent.com/hayrankal/chaosgui/refs/heads/main/emotegui"))()
+            print("Emote Gui (250+) scripti çalışıyor")
+            
+        elseif btn == "Voice Chat | Unban" then
+voiceChatService = game:GetService("VoiceChatService")
+voiceChatService:joinVoice()
+            print("Voice Chat | Unban scripti çalışıyor")
+            
+        elseif btn == "Anti Afk" then
+loadstring(game:HttpGet("https://raw.githubusercontent.com/hayrankal/chaosgui/refs/heads/main/antiafk"))()
+            print("Anti Afk scripti çalışıyor")
+            
+        elseif btn == "Universal Anti Ban" then
+loadstring(game:HttpGet("https://raw.githubusercontent.com/SystemSecRoblox/SystemSec/refs/heads/main/main.lua"))()
+            print("Universal Anti Ban scripti çalışıyor")
+            
+        elseif btn == "İnvisible" then
+loadstring(game:HttpGet("https://pastebin.com/raw/vP6CrQJj"))()
+            print("İnvisible scripti çalışıyor")
+        end
+    end)
+end
+
+-- Pencere hareketi
+local dragging
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+MainFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = MainFrame.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+MainFrame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
+    end
+end)
+
+-- Kontrol buton fonksiyonları
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+local minimized = false
+local originalSize = MainFrame.Size
+local minimizedSize = UDim2.new(0, 350, 0, 50)
+local currentPosition = MainFrame.Position
+
+MinimizeButton.MouseButton1Click:Connect(function()
+    if minimized then return end
+    minimized = true
+    currentPosition = MainFrame.Position
+    TweenService:Create(MainFrame, TweenInfo.new(0.3), {Size = minimizedSize}):Play()
+end)
+
+MaximizeButton.MouseButton1Click:Connect(function()
+    if not minimized then return end
+    minimized = false
+    MainFrame.Size = minimizedSize
+    TweenService:Create(MainFrame, TweenInfo.new(0.3), {Size = originalSize, Position = currentPosition}):Play()
+end)
